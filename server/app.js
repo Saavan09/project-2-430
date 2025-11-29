@@ -2,7 +2,7 @@ require('dotenv').config();
 const path = require('path');
 const express = require('express');
 const compression = require('compression');
-const favicon = require('serve-favicon');
+// const favicon = require('serve-favicon');
 const mongoose = require('mongoose');
 const expressHandlebars = require('express-handlebars');
 const helmet = require('helmet'); // obscures info from malicious hackers
@@ -33,7 +33,7 @@ redisClient.connect().then(() => {
   const app = express();
   app.use(helmet());
   app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted`)));
-  app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
+  // app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
   app.use(compression());
 
   app.engine('handlebars', expressHandlebars.engine({ defaultLayout: '' }));

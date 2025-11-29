@@ -41,28 +41,6 @@ const handleSignup = (e) => {
     return false;
 }
 
-const handleChangePassword = (e) => {
-    e.preventDefault();
-    helper.hideError();
-
-    const currentPass = e.target.querySelector('#currentPass').value;
-    const newPass = e.target.querySelector('#newPass').value;
-
-    if (!currentPass || !newPass) {
-        helper.handleError('All fields are required!');
-        return false;
-    }
-
-    helper.sendPost(e.target.action, { currentPass, newPass }, (result) => {
-        if (result.success) {
-            alert(result.success);
-            e.target.reset();
-        }
-    });
-
-    return false;
-}
-
 const LoginWindow = (props) => {
     return (
         <form id="loginForm"
@@ -100,26 +78,6 @@ const SignupWindow = (props) => {
         </form>
     );
 };
-
-const ChangePasswordWindow = (props) => {
-    return (
-        <form id="changePasswordForm"
-            name="changePasswordForm"
-            onSubmit={handleChangePassword}
-            action="/changePassword"
-            method="POST"
-            className="mainForm"
-        >
-            <label htmlFor="currentPass">Current Password: </label>
-            <input id="currentPass" type="password" name="currentPass" placeholder="Current password" />
-
-            <label htmlFor="newPass">New Password: </label>
-            <input id="newPass" type="password" name="newPass" placeholder="New password" />
-
-            <input className="formSubmit" type="submit" value="Change Password" />
-        </form>
-    );
-}
 
 const init = () => {
     const loginButton = document.getElementById('loginButton');
