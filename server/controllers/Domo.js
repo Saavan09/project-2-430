@@ -4,6 +4,7 @@ const { Domo } = models;
 
 const makerPage = async (req, res) => res.render('app');
 
+//make new domo
 const makeDomo = async (req, res) => {
   if (!req.body.name || !req.body.age || !req.body.classType) {
     return res.status(400).json({ error: 'All fields are required!' });
@@ -38,6 +39,7 @@ const makeDomo = async (req, res) => {
   }
 };
 
+//get the domos for an account
 const getDomos = async (req, res) => {
   try {
     const query = { owner: req.session.account._id };

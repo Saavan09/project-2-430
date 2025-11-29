@@ -3,6 +3,7 @@ const React = require('react');
 const { useState, useEffect } = React;
 const { createRoot } = require('react-dom/client');
 
+//handles form submission when creating a new domo
 const handleDomo = (e, onDomoAdded) => {
     e.preventDefault();
     helper.hideError();
@@ -20,6 +21,7 @@ const handleDomo = (e, onDomoAdded) => {
     return false;
 }
 
+//react component that renders the domo creation form
 const DomoForm = (props) => {
     return (
         <form id="domoForm"
@@ -40,6 +42,7 @@ const DomoForm = (props) => {
     )
 }
 
+//domo fetcher and display, rerenders list anytime smth happens
 const DomoList = (props) => {
     const [domos, setDomos] = useState(props.domos);
 
@@ -93,6 +96,7 @@ const App = () => {
     );
 };
 
+//boots up react and attaches event listeners
 const init = () => {
     const root = createRoot(document.getElementById('app'));
     root.render(<App />);
