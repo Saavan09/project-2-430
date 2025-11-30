@@ -16,6 +16,9 @@ const router = (app) => {
 
   // root
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
+
+  // 404 handler for anything nonexistent
+  app.use((req, res) => { res.status(404).render('404'); });
 };
 
 module.exports = router;
