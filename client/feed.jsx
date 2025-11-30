@@ -80,31 +80,27 @@ const FeedList = (props) => {
     );
 };
 
-const App = () => {
-    const [reloadFeed, setReloadFeed] = useState(false);
-    const [showChangePassword, setShowChangePassword] = useState(false);
-
-    let mainContent;
-
-    if (showChangePassword) {
-        mainContent = <ChangePasswordForm onBack={() => setShowChangePassword(false)} />;
-    } else {
-        mainContent = (
-            <>
-                <button onClick={() => setShowChangePassword(true)}>Change Password</button>
-                <PostForm triggerReload={() => setReloadFeed(!reloadFeed)} />
-                <FeedList reloadFeed={reloadFeed} />
-            </>
-        );
-    }
-
-    return <div>{mainContent}</div>;
-};
-
 //boots up react and attaches event listeners
 const init = () => {
     const root = createRoot(document.getElementById('app'));
-    root.render(<App />);
+    const changePassButton = document.getElementById('changePassButton');
+    let reloadFeed = false;
+
+    const renderFeed = () => {
+        root.render(
+            <>
+                <PostForm triggerReload={() => { reloadFeed = !reloadFeed; renderFeed(); }} />
+                <FeedList reloadFeed={reloadFeed} />
+            </>
+        );
+    };
+
+    changePassButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        root.render(<ChangePasswordForm />);
+    });
+
+    renderFeed();
 };
 
 window.onload = init;

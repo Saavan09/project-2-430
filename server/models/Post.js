@@ -25,7 +25,6 @@ const PostSchema = new mongoose.Schema({
 });
 
 // static method to return a version for api/frontend
-// (og: domoschema)
 PostSchema.statics.toAPI = (doc) => ({
   content: doc.content,
   author: doc.author,
