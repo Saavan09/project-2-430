@@ -2,13 +2,13 @@ const models = require('../models');
 
 const { Post } = models;
 
-//main page where post list is shown
+// main page where post list is shown
 const feedPage = async (req, res) => res.render('app');
 
-//make new post
+// make new post
 const makePost = async (req, res) => {
-  const content = req.body.content;
-  const isPublic = req.body.isPublic;
+  const { content } = req.body;
+  const { isPublic } = req.body;
 
   if (!req.body.content) {
     return res.status(400).json({ error: 'Content is required!' });
@@ -30,22 +30,22 @@ const makePost = async (req, res) => {
   }
 };
 
-//get the posts visible to the currently logged in account
-//all public posts + private posts from this account
+// get the posts visible to the currently logged in account
+// all public posts + private posts from this account
 const getPosts = async (req, res) => {
   try {
     const query = {
-      //mongoose syntax to return posts matching any of these filters
-      //so returns posts that are public AND rturns posts made by the current logged in account
+      // mongoose syntax to return posts matching any of these filters
+      // so returns posts that are public AND rturns posts made by the current logged in account
       $or: [
         { isPublic: true },
         { author: req.session.account._id },
       ],
     };
 
-    const posts = await Post.find(query) //the search criteria defined earlier
-      .sort({ createdDate: -1 }) //to sort the newest first, oldest last
-      .populate('author', 'username') //replace "author" with "username"
+    const posts = await Post.find(query) // the search criteria defined earlier
+      .sort({ createdDate: -1 }) // to sort the newest first, oldest last
+      .populate('author', 'username') // replace "author" with "username"
       .lean()
       .exec();
 

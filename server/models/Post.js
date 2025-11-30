@@ -12,20 +12,20 @@ const PostSchema = new mongoose.Schema({
   content: {
     type: String,
     required: true,
-    set: setContent, //trim
+    set: setContent, // trim
   },
   createdDate: {
     type: Date,
-    default: Date.now, //sets timestamp to current time when post is created
+    default: Date.now, // sets timestamp to current time when post is created
   },
   isPublic: {
     type: Boolean,
-    default: true, //posts are public by default
+    default: true, // posts are public by default
   },
 });
 
-//static method to return a version for api/frontend 
-//(og: domoschema)
+// static method to return a version for api/frontend
+// (og: domoschema)
 PostSchema.statics.toAPI = (doc) => ({
   content: doc.content,
   author: doc.author,
