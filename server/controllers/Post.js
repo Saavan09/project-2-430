@@ -16,8 +16,8 @@ const makePost = async (req, res) => {
 
   const postData = {
     author: req.session.account._id,
-    content: req.body.content,
-    isPublic: req.body.isPublic,
+    content,
+    isPublic,
   };
 
   try {

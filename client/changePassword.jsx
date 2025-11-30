@@ -49,4 +49,4 @@ const ChangePasswordForm = () => (
     </form>
 );
 
-module.exports = { ChangePasswordForm, initChangePassword };
+module.exports = { ChangePasswordForm };

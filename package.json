@@ -1,7 +1,7 @@
 {
-  "name": "domomaker",
+  "name": "linkup",
   "version": "1.0.0",
-  "description": "A Simple Login Example using Node.js, Mongo and Redis",
+  "description": "A simple social media app to post and chat with frinds!",
   "main": "./server/app.js",
   "scripts": {
     "webpack": "webpack",
@@ -18,7 +18,7 @@
     "Redis",
     "Login"
   ],
-  "author": "Cody Van De Mark / Austin Willoughby",
+  "author": "Saavan Tandon",
   "license": "Apache 2.0",
   "dependencies": {
     "bcrypt": "^6.0.0",
