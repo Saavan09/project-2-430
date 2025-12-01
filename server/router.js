@@ -17,6 +17,7 @@ const router = (app) => {
   // profile routes
   app.get('/getProfile', mid.requiresLogin, controllers.Account.getProfile);
   app.get('/profile', mid.requiresLogin, (req, res) => { res.render('profile'); });
+  app.post('/editProfile', mid.requiresLogin, controllers.Account.editProfile);
 
   // root
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);

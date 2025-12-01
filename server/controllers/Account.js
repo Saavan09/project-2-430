@@ -89,6 +89,7 @@ const changePassword = async (req, res) => {
   }
 };
 
+// get the profile info to display on user profile page
 const getProfile = async (req, res) => {
   const account = await Account.findById(req.session.account._id).exec();
   if (!account) return res.status(404).json({ error: 'Account not found!' });
@@ -102,6 +103,34 @@ const getProfile = async (req, res) => {
   });
 };
 
+// edit the user's profile fields (currently displayname and bio)
+const editProfile = async (req, res) => {
+  const { displayName, bio } = req.body;
+
+  try {
+    const account = await Account.findById(req.session.account._id).exec();
+    if (!account) return res.status(404).json({ error: 'Account not found!' });
+
+    account.displayName = displayName || account.displayName;
+    account.bio = bio || account.bio;
+
+    await account.save();
+
+    return res.json({
+      success: true,
+      profile: {
+        username: account.username,
+        displayName: account.displayName,
+        bio: account.bio,
+        createdDate: account.createdDate,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Error editing profile!' });
+  }
+};
+
 module.exports = {
   loginPage,
   login,
@@ -109,4 +138,5 @@ module.exports = {
   signup,
   changePassword,
   getProfile,
+  editProfile,
 };
