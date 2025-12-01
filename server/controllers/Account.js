@@ -89,10 +89,24 @@ const changePassword = async (req, res) => {
   }
 };
 
+const getProfile = async (req, res) => {
+  const account = await Account.findById(req.session.account._id).exec();
+  if (!account) return res.status(404).json({ error: 'Account not found!' });
+
+  return res.json({
+    username: account.username,
+    bio: account.bio || '',
+    displayName: account.displayName,
+    createdDate: account.createdDate,
+    isOwner: true,
+  });
+};
+
 module.exports = {
   loginPage,
   login,
   logout,
   signup,
   changePassword,
+  getProfile,
 };

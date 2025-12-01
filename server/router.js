@@ -14,6 +14,10 @@ const router = (app) => {
   app.post('/post', mid.requiresLogin, controllers.Post.makePost);
   app.get('/getPosts', mid.requiresLogin, controllers.Post.getPosts);
 
+  // profile routes
+  app.get('/getProfile', mid.requiresLogin, controllers.Account.getProfile);
+  app.get('/profile', mid.requiresLogin, (req, res) => { res.render('profile'); });
+
   // root
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 
