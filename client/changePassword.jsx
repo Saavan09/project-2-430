@@ -21,9 +21,15 @@ const handleChangePassword = (e) => {
         return false;
     }
 
+    if (currentPass == newPass) {
+        helper.handleError('New password cannot be the same as your old password!');
+        return false;
+    }
+
     helper.sendPost('/changePassword', { currentPass, newPass }, (result) => {
         if (result.success) {
             e.target.reset();
+            helper.handleError('Password changed successfully!');
         }
     });
 
