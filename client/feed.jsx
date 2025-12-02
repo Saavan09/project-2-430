@@ -18,6 +18,7 @@ const handlePost = (e, onPostAdded) => {
     }
 
     helper.sendPost(e.target.action, { content, isPublic }, onPostAdded);
+    e.target.reset();
     return false;
 };
 
