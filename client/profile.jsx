@@ -6,7 +6,13 @@ const { createRoot } = require('react-dom/client');
 //display the profile info
 const ProfileDisplay = (props) => (
     <div className="profileInfo">
-        <p>{props.displayName}</p>
+        <p>
+            {props.displayName}{' '}
+            {props.isPremium && (
+                <img src="/assets/img/premium_icon.png" alt="Premium User" className="premiumIcon"
+                />
+            )}
+        </p>
         <p>@{props.username}</p>
         {props.bio ? (
             <p className="bio">{props.bio}</p>

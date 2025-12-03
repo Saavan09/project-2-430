@@ -102,6 +102,7 @@ const getProfile = async (req, res) => {
     displayName: account.displayName,
     createdDate: account.createdDate,
     isOwner: true,
+    isPremium: account.isPremium,
   });
 };
 
