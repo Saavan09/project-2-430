@@ -126,6 +126,7 @@ const editProfile = async (req, res) => {
         displayName: account.displayName,
         bio: account.bio,
         createdDate: account.createdDate,
+        isPremium: account.isPremium,
       },
     });
   } catch (err) {
