@@ -131,6 +131,24 @@ const editProfile = async (req, res) => {
   }
 };
 
+const upgradePremium = async (req, res) => {
+  try {
+    const account = await Account.findById(req.session.account._id).exec();
+    if (!account) return res.status(404).json({ error: 'Account not found!' });
+
+    account.isPremium = true;
+    await account.save();
+
+    // update session so that it can be reflected in the ui
+    req.session.account.isPremium = true;
+
+    return res.json({ success: true, message: 'Account upgraded to premium!' });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'An error occurred upgrading your account!' });
+  }
+};
+
 module.exports = {
   loginPage,
   login,
@@ -139,4 +157,5 @@ module.exports = {
   changePassword,
   getProfile,
   editProfile,
+  upgradePremium,
 };

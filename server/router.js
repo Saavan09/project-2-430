@@ -19,6 +19,10 @@ const router = (app) => {
   app.get('/profile', mid.requiresLogin, (req, res) => { res.render('profile'); });
   app.post('/editProfile', mid.requiresLogin, controllers.Account.editProfile);
 
+  // premium routes
+  app.post('/upgradePremium', mid.requiresLogin, controllers.Account.upgradePremium);
+  app.get('/premium', mid.requiresLogin, (req, res) => { res.render('premium'); });
+
   // root
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 
