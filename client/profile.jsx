@@ -34,6 +34,7 @@ const ProfileApp = () => {
     });
 
     const [editing, setEditing] = useState(false);
+    const [tempProfile, setTempProfile] = useState(profileData);
 
     //after editing profile
     const handleSave = async (e) => {
@@ -43,8 +44,8 @@ const ProfileApp = () => {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                displayName: profileData.displayName,
-                bio: profileData.bio,
+                displayName: tempProfile.displayName,
+                bio: tempProfile.bio,
             }),
         });
 
@@ -60,6 +61,7 @@ const ProfileApp = () => {
             const response = await fetch('/getProfile');
             const data = await response.json();
             setProfileData(data);
+            setTempProfile(data);
         };
         fetchProfile();
     }, []);
@@ -71,22 +73,27 @@ const ProfileApp = () => {
                 <label>Display Name</label>
                 <input
                     type="text"
-                    value={profileData.displayName}
+                    value={tempProfile.displayName}
                     onChange={(e) =>
-                        setProfileData({ ...profileData, displayName: e.target.value })
+                        setTempProfile({ ...tempProfile, displayName: e.target.value })
                     }
                 />
 
                 <label>Bio</label>
                 <textarea
-                    value={profileData.bio}
+                    value={tempProfile.bio}
                     onChange={(e) =>
-                        setProfileData({ ...profileData, bio: e.target.value })
+                        setTempProfile({ ...tempProfile, bio: e.target.value })
                     }
                 />
 
                 <button type="submit">Save</button>
-                <button type="button" onClick={() => setEditing(false)}>Cancel</button>
+                <button type="button"
+                    onClick={() => {
+                        setTempProfile(profileData); //discard unsaved edits
+                        setEditing(false);
+                    }}
+                >Cancel</button>
             </form>
         );
     }
@@ -95,7 +102,12 @@ const ProfileApp = () => {
     return (
         <div>
             <ProfileDisplay {...profileData} />
-            <button onClick={() => setEditing(true)}>Edit Profile</button>
+            <button
+                onClick={() => {
+                    setTempProfile(profileData); //load current values into temp form
+                    setEditing(true);
+                }}
+                >Edit Profile</button>
         </div>
     );
 
