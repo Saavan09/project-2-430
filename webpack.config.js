@@ -5,6 +5,7 @@ module.exports = {
         app: './client/feed.jsx',
         login: './client/login.jsx',
         profile: './client/profile.jsx',
+        premium: './client/premium.jsx',
     },
     module: {
         rules: [

@@ -4,6 +4,8 @@ const models = require('../models');
 const { Account } = models;
 
 const loginPage = (req, res) => res.render('login');
+const profilePage = (req, res) => res.render('profile');
+const premiumPage = (req, res) => res.render('premium');
 
 const logout = (req, res) => {
   req.session.destroy();
@@ -139,18 +141,36 @@ const upgradePremium = async (req, res) => {
     account.isPremium = true;
     await account.save();
 
-    // update session so that it can be reflected in the ui
     req.session.account.isPremium = true;
 
-    return res.json({ success: true, message: 'Account upgraded to premium!' });
+    return res.json({ success: true });
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: 'An error occurred upgrading your account!' });
   }
 };
 
+const downgradePremium = async (req, res) => {
+  try {
+    const account = await Account.findById(req.session.account._id).exec();
+    if (!account) return res.status(404).json({ error: 'Account not found!' });
+
+    account.isPremium = false;
+    await account.save();
+
+    req.session.account.isPremium = false;
+
+    return res.json({ success: true });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'An error occurred!' });
+  }
+};
+
 module.exports = {
   loginPage,
+  profilePage,
+  premiumPage,
   login,
   logout,
   signup,
@@ -158,4 +178,5 @@ module.exports = {
   getProfile,
   editProfile,
   upgradePremium,
+  downgradePremium,
 };

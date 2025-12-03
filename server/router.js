@@ -16,12 +16,13 @@ const router = (app) => {
 
   // profile routes
   app.get('/getProfile', mid.requiresLogin, controllers.Account.getProfile);
-  app.get('/profile', mid.requiresLogin, (req, res) => { res.render('profile'); });
+  app.get('/profile', mid.requiresLogin, controllers.Account.profilePage);
   app.post('/editProfile', mid.requiresLogin, controllers.Account.editProfile);
 
   // premium routes
   app.post('/upgradePremium', mid.requiresLogin, controllers.Account.upgradePremium);
-  app.get('/premium', mid.requiresLogin, (req, res) => { res.render('premium'); });
+  app.post('/downgradePremium', mid.requiresLogin, controllers.Account.upgradePremium);
+  app.get('/premium', mid.requiresLogin, controllers.Account.premiumPage);
 
   // root
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
