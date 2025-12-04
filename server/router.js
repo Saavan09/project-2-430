@@ -21,7 +21,7 @@ const router = (app) => {
 
   // premium routes
   app.post('/upgradePremium', mid.requiresLogin, controllers.Account.upgradePremium);
-  app.post('/downgradePremium', mid.requiresLogin, controllers.Account.upgradePremium);
+  app.post('/downgradePremium', mid.requiresLogin, controllers.Account.downgradePremium);
   app.get('/premium', mid.requiresLogin, controllers.Account.premiumPage);
 
   // root

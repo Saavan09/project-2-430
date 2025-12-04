@@ -66,7 +66,7 @@ const FeedList = (props) => {
         <div key={post._id} className="post">
             <div className="postHeader">
                 <strong>
-                    {post.author.displayName || ''}
+                    {post.author.displayName || ''}{' '}
                     {post.author.isPremium && (
                         <img
                             src="/assets/img/premium_icon.png"

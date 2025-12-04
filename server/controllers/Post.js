@@ -23,7 +23,11 @@ const makePost = async (req, res) => {
   try {
     const newPost = new Post(postData);
     await newPost.save();
-    return res.status(201).json(Post.toAPI(newPost));
+
+    await newPost.populate('author', 'username displayName isPremium');
+    const postResponse = Post.toAPI(newPost);
+
+    return res.status(201).json(postResponse);
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: 'An error occured while posting!' });
