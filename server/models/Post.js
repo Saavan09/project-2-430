@@ -27,7 +27,12 @@ const PostSchema = new mongoose.Schema({
 // static method to return a version for api/frontend
 PostSchema.statics.toAPI = (doc) => ({
   content: doc.content,
-  author: doc.author,
+  author: {
+    _id: doc.author._id,
+    username: doc.author.username,
+    displayName: doc.author.displayName,
+    isPremium: doc.author.isPremium,
+  },
   isPublic: doc.isPublic,
   createdDate: doc.createdDate,
 });

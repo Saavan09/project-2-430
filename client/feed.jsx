@@ -65,7 +65,17 @@ const FeedList = (props) => {
     const postNodes = posts.map((post) => (
         <div key={post._id} className="post">
             <div className="postHeader">
-                <strong>{post.author.username}</strong> ·{' '}
+                <strong>
+                    {post.author.displayName || ''}
+                    {post.author.isPremium && (
+                        <img
+                            src="/assets/img/premium_icon.png"
+                            alt="Verified"
+                            className="premiumIcon"
+                        />
+                    )} {' '}
+                    @{post.author.username}
+                </strong> ·{' '}
                 <small>{new Date(post.createdDate).toLocaleString()}</small> ·{' '}
                 <em>{post.isPublic ? 'Public' : 'Private'}</em>
             </div>

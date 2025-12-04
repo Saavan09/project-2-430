@@ -45,7 +45,7 @@ const getPosts = async (req, res) => {
 
     const posts = await Post.find(query) // the search criteria defined earlier
       .sort({ createdDate: -1 }) // to sort the newest first, oldest last
-      .populate('author', 'username') // replace "author" with "username"
+      .populate('author', 'username displayName isPremium') // replace "author" with "username"
       .lean()
       .exec();
 
