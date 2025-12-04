@@ -23,6 +23,63 @@ const ProfileDisplay = (props) => (
     </div>
 );
 
+//change password form
+const ChangePasswordForm = ({ onCancel }) => {
+
+    const handleChangePassword = async (e) => {
+        e.preventDefault();
+        helper.hideError();
+
+        const currentPass = e.target.currentPass.value;
+        const newPass = e.target.newPass.value;
+        const newPass2 = e.target.newPass2.value;
+
+        if (!currentPass || !newPass || !newPass2) {
+            helper.handleError("All fields are required!");
+            return;
+        }
+
+        if (newPass !== newPass2) {
+            helper.handleError("New passwords do not match!");
+            return;
+        }
+
+        if (currentPass === newPass) {
+            helper.handleError("New password cannot be the same as your old password!");
+            return;
+        }
+
+        const res = await fetch('/changePassword', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ currentPass, newPass })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            helper.handleError("Password changed successfully!");
+            onCancel();
+        }
+    };
+
+    return (
+        <form className="changePasswordForm" onSubmit={handleChangePassword}>
+            <label>Current Password</label>
+            <input type="password" name="currentPass" required />
+
+            <label>New Password</label>
+            <input type="password" name="newPass" required />
+
+            <label>Retype New Password</label>
+            <input type="password" name="newPass2" required />
+
+            <button type="submit">Change Password</button>
+            <button type="button" onClick={onCancel}>Cancel</button>
+        </form>
+    );
+};
+
 //main component, handles fetching and rendering profile
 const ProfileApp = () => {
     const [profileData, setProfileData] = useState({
@@ -34,6 +91,7 @@ const ProfileApp = () => {
     });
 
     const [editing, setEditing] = useState(false);
+    const [changingPassword, setChangingPassword] = useState(false);
     const [tempProfile, setTempProfile] = useState(profileData);
 
     //after editing profile
@@ -98,6 +156,15 @@ const ProfileApp = () => {
         );
     }
 
+    //if changing password
+    // if changing password
+    if (changingPassword) {
+        return (
+            <ChangePasswordForm onCancel={() => setChangingPassword(false)} />
+        );
+    }
+
+
     //otherwise show default view profile
     return (
         <div>
@@ -107,7 +174,13 @@ const ProfileApp = () => {
                     setTempProfile(profileData); //load current values into temp form
                     setEditing(true);
                 }}
-                >Edit Profile</button>
+            >Edit Profile</button>
+
+            <button
+                onClick={() => setChangingPassword(true)}
+            >
+                Change Password
+            </button>
         </div>
     );
 

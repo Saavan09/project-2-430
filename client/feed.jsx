@@ -2,7 +2,6 @@ const helper = require('./helper.js');
 const React = require('react');
 const { useState, useEffect } = React;
 const { createRoot } = require('react-dom/client');
-const { ChangePasswordForm } = require('./changePassword.jsx');
 
 //handles form submission when creating a new post
 const handlePost = (e, onPostAdded) => {
@@ -84,7 +83,6 @@ const FeedList = (props) => {
 //boots up react and attaches event listeners
 const init = () => {
     const root = createRoot(document.getElementById('app'));
-    const changePassButton = document.getElementById('changePassButton');
     let reloadFeed = false;
 
     const renderFeed = () => {
@@ -95,11 +93,6 @@ const init = () => {
             </>
         );
     };
-
-    changePassButton.addEventListener('click', (e) => {
-        e.preventDefault();
-        root.render(<ChangePasswordForm />);
-    });
 
     renderFeed();
 };
