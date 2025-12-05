@@ -99,50 +99,50 @@ const ProfileApp = () => {
     const [editing, setEditing] = useState(false);
     const [changingPassword, setChangingPassword] = useState(false);
     const [tempProfile, setTempProfile] = useState(profileData);
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    //selecting a pfp
+    const handleFileSelect = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+            const reader = new FileReader();
+            reader.onload = () => {
+                setTempProfile(prev => ({
+                    ...prev,
+                    profilePicPreview: reader.result,//preview
+                }));
+            };
+            reader.readAsDataURL(file);
+        }
+    };
 
     //after editing profile
     const handleSave = async (e) => {
         e.preventDefault();
 
-        const res = await fetch('/editProfile', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                displayName: tempProfile.displayName,
-                bio: tempProfile.bio,
-            }),
-        });
-
-        const data = await res.json();
-        if (data.success) {
-            setProfileData(data.profile);
-            setEditing(false);
-        }
-    };
-
-    const handleUpload = async (e) => {
-        const file = e.target.files[0]; 
-        if (!file) return;
-
         const formData = new FormData();
-        formData.append('profilePic', file);
+        formData.append('displayName', tempProfile.displayName);
+        formData.append('bio', tempProfile.bio);
 
-        const res = await fetch('/uploadProfilePic', {
+        //only append profilePic if user selected a new one
+        if (selectedFile) {
+            formData.append('profilePic', selectedFile);
+        }
+
+        const res = await fetch('/editProfile', {
             method: 'POST',
             body: formData,
         });
 
         const data = await res.json();
-
         if (data.success) {
-            //update tempProfile and profileData to immediately show the new picture
-            setTempProfile({ ...tempProfile, profilePic: data.profilePic });
-            setProfileData({ ...profileData, profilePic: data.profilePic });
-        } else {
-            helper.handleError(data.error);
+            setProfileData(data.profile);
+            setTempProfile(data.profile);
+            setSelectedFile(null);
+            setEditing(false);
         }
     };
-
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -159,7 +159,11 @@ const ProfileApp = () => {
         return (
             <form className="editProfileForm" onSubmit={handleSave}>
                 <img
-                    src={tempProfile.profilePic || '/assets/img/default_pfp.png'}
+                    src={
+                        tempProfile.profilePicPreview ||
+                        tempProfile.profilePic ||
+                        '/assets/img/default_pfp.png'
+                    }
                     alt="Profile Picture"
                     className="profilePic"
                 />
@@ -170,7 +174,7 @@ const ProfileApp = () => {
 
                 <br />
 
-                <input type="file" name="profilePic" accept="image/*" onChange={handleUpload} />
+                <input type="file" name="profilePic" accept="image/*" onChange={handleFileSelect} />
 
                 <br />
 
