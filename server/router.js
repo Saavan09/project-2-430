@@ -1,5 +1,6 @@
 const controllers = require('./controllers');
 const mid = require('./middleware');
+const upload = require('./middleware/upload');
 
 const router = (app) => {
   // account routes
@@ -19,6 +20,7 @@ const router = (app) => {
   app.get('/getProfile', mid.requiresLogin, controllers.Account.getProfile);
   app.get('/profile', mid.requiresLogin, controllers.Account.profilePage);
   app.post('/editProfile', mid.requiresLogin, controllers.Account.editProfile);
+  app.post('/uploadProfilePic', mid.requiresLogin, upload.single('profilePic'), controllers.Account.uploadProfilePic);
 
   // premium routes
   app.post('/upgradePremium', mid.requiresLogin, controllers.Account.upgradePremium);

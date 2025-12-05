@@ -103,6 +103,7 @@ const getProfile = async (req, res) => {
     createdDate: account.createdDate,
     isOwner: true,
     isPremium: account.isPremium,
+    profilePic: account.profilePic || '/assets/img/default_pfp.png',
   });
 };
 
@@ -169,6 +170,30 @@ const downgradePremium = async (req, res) => {
   }
 };
 
+// uploading a pfp
+const uploadProfilePic = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded!' });
+    }
+
+    const account = await Account.findById(req.session.account._id).exec();
+    if (!account) return res.status(404).json({ error: 'Account not found!' });
+
+    // save the relative path to mongo
+    account.profilePic = `/uploads/${req.file.filename}`;
+    await account.save();
+
+    // Update session so frontend can use it immediately
+    req.session.account.profilePic = account.profilePic;
+
+    return res.json({ success: true, profilePic: account.profilePic });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Error uploading profile picture!' });
+  }
+};
+
 module.exports = {
   loginPage,
   profilePage,
@@ -181,4 +206,5 @@ module.exports = {
   editProfile,
   upgradePremium,
   downgradePremium,
+  uploadProfilePic,
 };

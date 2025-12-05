@@ -15,3 +15,25 @@
 .ad {
   margin: 2%;
 }
+
+/* pfp styling */
+.profilePic {
+  width: 150px; /* default size */
+  height: 150px;
+  object-fit: cover; /* makes sure the image fills the square without stretching */
+  border-radius: 50%; /* circle */
+}
+
+/* responsive scaling of pfp, different default sizes */
+@media (max-width: 768px) {
+  .profilePic {
+    width: 120px;
+    height: 120px;
+  }
+}
+@media (max-width: 480px) {
+  .profilePic {
+    width: 80px;
+    height: 80px;
+  }
+}

@@ -49,6 +49,11 @@ const AccountSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  profilePic: {
+    type: String, // stores file path like "/uploads/abc123.png"
+    default: '/assets/img/default_pfp.png',
+  },
+
 });
 
 // Converts a doc to something we can store in redis later on.
@@ -59,6 +64,7 @@ AccountSchema.statics.toAPI = (doc) => ({
   displayName: doc.displayName,
   createdDate: doc.createdDate,
   isPremium: doc.isPremium,
+  profilePic: doc.profilePic,
 });
 
 // Helper function to hash a password

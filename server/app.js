@@ -10,6 +10,7 @@ const session = require('express-session');
 // sessions for a user
 const { RedisStore } = require('connect-redis');
 const redis = require('redis');
+const fs = require('fs');
 
 const router = require('./router.js');
 
@@ -33,6 +34,12 @@ redisClient.connect().then(() => {
   const app = express();
   app.use(helmet());
   app.use('/assets', express.static(path.resolve(`${__dirname}/../hosted`)));
+
+  // UPLOAD PFPS
+  const uploadsDir = path.resolve(`${__dirname}/../uploads`);
+  fs.mkdirSync(uploadsDir, { recursive: true });
+  app.use('/uploads', express.static(uploadsDir));
+
   // app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
   app.use(compression());
 

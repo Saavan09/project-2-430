@@ -6,6 +6,12 @@ const { createRoot } = require('react-dom/client');
 //display the profile info
 const ProfileDisplay = (props) => (
     <div className="profileInfo">
+        <img
+            src={props.profilePic || '/assets/img/default_pfp.png'}
+            alt="Profile Picture"
+            className="profilePic"
+        />
+
         <p>
             {props.displayName}{' '}
             {props.isPremium && (
@@ -114,6 +120,30 @@ const ProfileApp = () => {
         }
     };
 
+    const handleUpload = async (e) => {
+        const file = e.target.files[0]; 
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('profilePic', file);
+
+        const res = await fetch('/uploadProfilePic', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            //update tempProfile and profileData to immediately show the new picture
+            setTempProfile({ ...tempProfile, profilePic: data.profilePic });
+            setProfileData({ ...profileData, profilePic: data.profilePic });
+        } else {
+            helper.handleError(data.error);
+        }
+    };
+
+
     useEffect(() => {
         const fetchProfile = async () => {
             const response = await fetch('/getProfile');
@@ -128,7 +158,23 @@ const ProfileApp = () => {
     if (editing) {
         return (
             <form className="editProfileForm" onSubmit={handleSave}>
-                <label>Display Name</label>
+                <img
+                    src={tempProfile.profilePic || '/assets/img/default_pfp.png'}
+                    alt="Profile Picture"
+                    className="profilePic"
+                />
+
+                <br /><br />
+
+                <label>Profile Picture</label>
+
+                <br />
+
+                <input type="file" name="profilePic" accept="image/*" onChange={handleUpload} />
+
+                <br />
+
+                <label>Display Name</label><br />
                 <input
                     type="text"
                     value={tempProfile.displayName}
@@ -137,13 +183,17 @@ const ProfileApp = () => {
                     }
                 />
 
-                <label>Bio</label>
+                <br />
+
+                <label>Bio</label><br />
                 <textarea
                     value={tempProfile.bio}
                     onChange={(e) =>
                         setTempProfile({ ...tempProfile, bio: e.target.value })
                     }
                 />
+
+                <br />
 
                 <button type="submit">Save</button>
                 <button type="button"
