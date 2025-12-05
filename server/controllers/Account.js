@@ -115,10 +115,23 @@ const editProfile = async (req, res) => {
     const account = await Account.findById(req.session.account._id).exec();
     if (!account) return res.status(404).json({ error: 'Account not found!' });
 
+    // update text fields
     account.displayName = displayName || account.displayName;
     account.bio = bio || account.bio;
 
+    // update pfp if new pfp was uploaded
+    if (req.file) {
+      account.profilePic = `/uploads/${req.file.filename}`;
+    }
+
     await account.save();
+
+    // update session immediately so frontend sees changes
+    req.session.account.displayName = account.displayName;
+    req.session.account.bio = account.bio;
+    if (req.file) {
+      req.session.account.profilePic = account.profilePic;
+    }
 
     return res.json({
       success: true,
@@ -128,6 +141,7 @@ const editProfile = async (req, res) => {
         bio: account.bio,
         createdDate: account.createdDate,
         isPremium: account.isPremium,
+        profilePic: account.profilePic,
       },
     });
   } catch (err) {
