@@ -9,10 +9,11 @@ const router = (app) => {
   app.get('/logout', mid.requiresLogin, controllers.Account.logout);
   app.post('/signup', mid.requiresSecure, mid.requiresLogout, controllers.Account.signup);
 
-  // post routes
+  // feed routes
   app.get('/feed', mid.requiresLogin, controllers.Post.feedPage);
   app.post('/post', mid.requiresLogin, controllers.Post.makePost);
   app.get('/getPosts', mid.requiresLogin, controllers.Post.getPosts);
+  app.get('/getCurrentUser', mid.requiresLogin, controllers.Post.getCurrentUser);// for ads
 
   // profile routes
   app.get('/getProfile', mid.requiresLogin, controllers.Account.getProfile);

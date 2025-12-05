@@ -21,39 +21,69 @@ const handlePost = (e, onPostAdded) => {
     return false;
 };
 
-const PostForm = (props) => (
-    <form
-        id="postForm"
-        onSubmit={(e) => handlePost(e, props.triggerReload)}
-        action="/post"
-        method="POST"
-        className="postForm"
-    >
-        <textarea
-            id="postContent"
-            name="content"
-            placeholder="What's happening?"
-            rows="3"
-            required
-        />
-        <label>
-            <input id="postPublic" type="checkbox" name="isPublic" defaultChecked />
-            Public
-        </label>
-        <input className="postSubmit" type="submit" value="Post" />
-    </form>
-);
+const PostForm = (props) => {
+    const onSubmitHandler = (e) => {
+        handlePost(e, props.triggerReload);
+    };
+
+    return (
+        <form
+            id="postForm"
+            onSubmit={onSubmitHandler}
+            action="/post"
+            method="POST"
+            className="postForm"
+        >
+            <textarea
+                id="postContent"
+                name="content"
+                placeholder="What's happening?"
+                rows="3"
+                required
+            />
+            <label>
+                <input id="postPublic" type="checkbox" name="isPublic" defaultChecked />
+                Public
+            </label>
+            <input className="postSubmit" type="submit" value="Post" />
+        </form>
+    );
+};
+
+//all possible fake ads
+const allAds = [
+    '/assets/img/ad_1.png',
+    '/assets/img/ad_2.png',
+    '/assets/img/ad_3.png',
+    '/assets/img/ad_4.png',
+];
+
+//get random ads to show on the page
+const getRandomAds = (count = 2) => {
+    const shuffled = allAds.sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+};
 
 //feed list of posts visible to user
 //rerenders list anytime smth happens 
 const FeedList = (props) => {
     const [posts, setPosts] = useState([]);
+    const [ads, setAds] = useState([]);
+    const [isPremium, setIsPremium] = useState(false);
 
     useEffect(() => {
         const loadPosts = async () => {
+            const userRes = await fetch('/getCurrentUser');
+            const userData = await userRes.json();
+            setIsPremium(userData.isPremium);
+
             const response = await fetch('/getPosts');
             const data = await response.json();
             setPosts(data.posts);
+            //if user isn't premium, display ads
+            if (!userData.isPremium) {
+                setAds(getRandomAds());
+            }
         };
         loadPosts();
     }, [props.reloadFeed]);
@@ -86,6 +116,12 @@ const FeedList = (props) => {
     return (
         <div className="feedList">
             {postNodes}
+
+            {!isPremium && ads.map((ad) => (
+                <div className="ad">
+                    <img src={ad} alt="ad" />
+                </div>
+            ))}
         </div>
     );
 };

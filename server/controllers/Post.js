@@ -3,7 +3,11 @@ const models = require('../models');
 const { Post } = models;
 
 // main page where post list is shown
-const feedPage = async (req, res) => res.render('app');
+const feedPage = async (req, res) => {
+  // to determine whether or not ads are shown
+  const isPremium = req.session.account.isPremium || false;
+  return res.render('app', { isPremium });
+};
 
 // make new post
 const makePost = async (req, res) => {
@@ -60,8 +64,15 @@ const getPosts = async (req, res) => {
   }
 };
 
+// get if user is premium or not (for ads)
+const getCurrentUser = (req, res) => {
+  if (!req.session.account) return res.status(401).json({ error: 'Not logged in' });
+  return res.json({ isPremium: req.session.account.isPremium });
+};
+
 module.exports = {
   feedPage,
   makePost,
   getPosts,
+  getCurrentUser,
 };
