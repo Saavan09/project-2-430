@@ -19,7 +19,10 @@ const ProfileDisplay = (props) => (
                 />
             )}
         </p>
-        <p>@{props.username}</p>
+        <p className="usernameColored" style={{ '--username-color': props.usernameColor }} >
+            @{props.username}{' '}
+        </p>
+
         {props.bio ? (
             <p className="bio">{props.bio}</p>
         ) : (
@@ -125,6 +128,11 @@ const ProfileApp = () => {
         formData.append('displayName', tempProfile.displayName);
         formData.append('bio', tempProfile.bio);
 
+        //only append username color if premium (otherwise won't have username color)
+        if (profileData.isPremium) {
+            formData.append('usernameColor', tempProfile.usernameColor);
+        }
+
         //only append profilePic if user selected a new one
         if (selectedFile) {
             formData.append('profilePic', selectedFile);
@@ -196,6 +204,22 @@ const ProfileApp = () => {
                         setTempProfile({ ...tempProfile, bio: e.target.value })
                     }
                 />
+
+                <br />
+
+                {profileData.isPremium && (
+                    <>
+                        <label>Username Color (premium only!)</label><br />
+                        <input
+                            type="color"
+                            value={tempProfile.usernameColor || '#000000'}
+                            onChange={(e) =>
+                                setTempProfile({ ...tempProfile, usernameColor: e.target.value })
+                            }
+                            name="usernameColor"
+                        />
+                    </>
+                )}
 
                 <br />
 

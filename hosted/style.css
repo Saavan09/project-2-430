@@ -37,3 +37,17 @@
     height: 80px;
   }
 }
+
+/* post pfp styling (in feed) */
+.postProfilePic {
+  width: 1.5em; /* default size */
+  height: 1.5em;
+  object-fit: cover; /* makes sure the image fills the square without stretching */
+  border-radius: 50%; /* circle */
+  vertical-align: middle;
+}
+
+/* username color for premium */
+.usernameColored {
+  color: var(--username-color, #000000);
+}

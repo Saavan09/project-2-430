@@ -95,6 +95,11 @@ const FeedList = (props) => {
     const postNodes = posts.map((post) => (
         <div key={post._id} className="post">
             <div className="postHeader">
+                <img
+                    src={post.author.profilePic || '/assets/img/default_pfp.png'}
+                    alt="post profile pic"
+                    className="postProfilePic"
+                />{' '}
                 <strong>
                     {post.author.displayName || ''}{' '}
                     {post.author.isPremium && (

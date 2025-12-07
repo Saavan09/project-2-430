@@ -104,12 +104,13 @@ const getProfile = async (req, res) => {
     isOwner: true,
     isPremium: account.isPremium,
     profilePic: account.profilePic || '/assets/img/default_pfp.png',
+    usernameColor: account.usernameColor,
   });
 };
 
-// edit the user's profile fields (currently displayname and bio)
+// edit the user's profile fields (displayname, bio, pfp, and username color if premium)
 const editProfile = async (req, res) => {
-  const { displayName, bio } = req.body;
+  const { displayName, bio, usernameColor } = req.body;
 
   try {
     const account = await Account.findById(req.session.account._id).exec();
@@ -118,6 +119,11 @@ const editProfile = async (req, res) => {
     // update text fields
     account.displayName = displayName || account.displayName;
     account.bio = bio || account.bio;
+
+    // only for premium
+    if (account.isPremium && usernameColor) {
+      account.usernameColor = usernameColor;
+    }
 
     // update pfp if new pfp was uploaded
     if (req.file) {
@@ -129,6 +135,9 @@ const editProfile = async (req, res) => {
     // update session immediately so frontend sees changes
     req.session.account.displayName = account.displayName;
     req.session.account.bio = account.bio;
+    if (account.isPremium && usernameColor) {
+      req.session.account.usernameColor = account.usernameColor;
+    }
     if (req.file) {
       req.session.account.profilePic = account.profilePic;
     }
@@ -142,6 +151,7 @@ const editProfile = async (req, res) => {
         createdDate: account.createdDate,
         isPremium: account.isPremium,
         profilePic: account.profilePic,
+        usernameColor: account.usernameColor,
       },
     });
   } catch (err) {

@@ -32,6 +32,8 @@ PostSchema.statics.toAPI = (doc) => ({
     username: doc.author.username,
     displayName: doc.author.displayName,
     isPremium: doc.author.isPremium,
+    profilePic: doc.author.profilePic || '/assets/img/default_pfp.png', // account pfp
+
   },
   isPublic: doc.isPublic,
   createdDate: doc.createdDate,
