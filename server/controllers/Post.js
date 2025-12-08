@@ -28,7 +28,7 @@ const makePost = async (req, res) => {
     const newPost = new Post(postData);
     await newPost.save();
 
-    await newPost.populate('author', 'username displayName isPremium');
+    await newPost.populate('author', 'username displayName isPremium usernameColor');
     const postResponse = Post.toAPI(newPost);
 
     return res.status(201).json(postResponse);
@@ -53,7 +53,7 @@ const getPosts = async (req, res) => {
 
     const posts = await Post.find(query) // the search criteria defined earlier
       .sort({ createdDate: -1 }) // to sort the newest first, oldest last
-      .populate('author', 'username displayName isPremium profilePic') // replace "author" with "username"
+      .populate('author', 'username displayName isPremium profilePic usernameColor') // replace "author" with "username"
       .lean()
       .exec();
 

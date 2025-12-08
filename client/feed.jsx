@@ -101,7 +101,12 @@ const FeedList = (props) => {
                     className="postProfilePic"
                 />{' '}
                 <strong>
-                    {post.author.displayName || ''}{' '}
+                    <span
+                        className="usernameColored"
+                        style={post.author.isPremium ? { '--username-color': post.author.usernameColor } : {}}
+                    >
+                        {post.author.displayName}{' '}
+                    </span>
                     {post.author.isPremium && (
                         <img
                             src="/assets/img/premium_icon.png"

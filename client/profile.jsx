@@ -12,17 +12,20 @@ const ProfileDisplay = (props) => (
             className="profilePic"
         />
 
-        <p>
+        <p
+            className="usernameColored"
+            style={props.isPremium ? { '--username-color': props.usernameColor } : {}}
+        >
             {props.displayName}{' '}
             {props.isPremium && (
-                <img src="/assets/img/premium_icon.png" alt="Premium User" className="premiumIcon"
+                <img
+                    src="/assets/img/premium_icon.png"
+                    alt="Premium User"
+                    className="premiumIcon"
                 />
             )}
         </p>
-        <p className="usernameColored" style={{ '--username-color': props.usernameColor }} >
-            @{props.username}{' '}
-        </p>
-
+        <p>@{props.username}</p>
         {props.bio ? (
             <p className="bio">{props.bio}</p>
         ) : (
