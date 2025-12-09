@@ -99,7 +99,6 @@ const ProfileApp = () => {
         bio: '',
         displayName: '',
         createdDate: '',
-        isOwner: true,//always true for now
     });
 
     const [editing, setEditing] = useState(false);

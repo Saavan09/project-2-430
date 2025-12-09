@@ -6,6 +6,7 @@ const { Account } = models;
 const loginPage = (req, res) => res.render('login');
 const profilePage = (req, res) => res.render('profile');
 const premiumPage = (req, res) => res.render('premium');
+const userProfilePage = (req, res) => res.render('userProfile');
 
 const logout = (req, res) => {
   req.session.destroy();
@@ -101,7 +102,6 @@ const getProfile = async (req, res) => {
     bio: account.bio || '',
     displayName: account.displayName,
     createdDate: account.createdDate,
-    isOwner: true,
     isPremium: account.isPremium,
     profilePic: account.profilePic || '/assets/img/default_pfp.png',
     usernameColor: account.usernameColor,
@@ -218,10 +218,35 @@ const uploadProfilePic = async (req, res) => {
   }
 };
 
+// get public profile data for a username (for viewing other users' profiles)
+const getUserProfile = async (req, res) => {
+  try {
+    const username = `${req.params.username}`;
+    if (!username) return res.status(400).json({ error: 'Username required' });
+
+    const account = await Account.findOne({ username }).exec();
+    if (!account) return res.status(404).json({ error: 'User not found' });
+
+    return res.json({
+      username: account.username,
+      bio: account.bio || '',
+      displayName: account.displayName,
+      createdDate: account.createdDate,
+      isPremium: account.isPremium,
+      profilePic: account.profilePic || '/assets/img/default_pfp.png',
+      usernameColor: account.usernameColor,
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Error fetching user profile!' });
+  }
+};
+
 module.exports = {
   loginPage,
   profilePage,
   premiumPage,
+  userProfilePage,
   login,
   logout,
   signup,
@@ -231,4 +256,5 @@ module.exports = {
   upgradePremium,
   downgradePremium,
   uploadProfilePic,
+  getUserProfile,
 };

@@ -18,10 +18,13 @@
 
 /* pfp styling */
 .profilePic {
-  width: 150px; /* default size */
+  width: 150px;
+  /* default size */
   height: 150px;
-  object-fit: cover; /* makes sure the image fills the square without stretching */
-  border-radius: 50%; /* circle */
+  object-fit: cover;
+  /* makes sure the image fills the square without stretching */
+  border-radius: 50%;
+  /* circle */
 }
 
 /* responsive scaling of pfp, different default sizes */
@@ -31,6 +34,7 @@
     height: 120px;
   }
 }
+
 @media (max-width: 480px) {
   .profilePic {
     width: 80px;
@@ -40,14 +44,23 @@
 
 /* post pfp styling (in feed) */
 .postProfilePic {
-  width: 1.5em; /* default size */
+  width: 1.5em;
+  /* default size */
   height: 1.5em;
-  object-fit: cover; /* makes sure the image fills the square without stretching */
-  border-radius: 50%; /* circle */
+  object-fit: cover;
+  /* makes sure the image fills the square without stretching */
+  border-radius: 50%;
+  /* circle */
   vertical-align: middle;
 }
 
 /* username color for premium */
 .usernameColored {
   color: var(--username-color, #000000);
+}
+
+/* username/display name clickability in feed */
+.usernameLink {
+  color: inherit; /* inherit the color from the parent span (usernameColored) */
+  text-decoration: none; /* remove underline */
 }

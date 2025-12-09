@@ -70,12 +70,14 @@ const FeedList = (props) => {
     const [posts, setPosts] = useState([]);
     const [ads, setAds] = useState([]);
     const [isPremium, setIsPremium] = useState(false);
+    const [currentUsername, setCurrentUsername] = useState('');
 
     useEffect(() => {
         const loadPosts = async () => {
             const userRes = await fetch('/getCurrentUser');
             const userData = await userRes.json();
             setIsPremium(userData.isPremium);
+            setCurrentUsername(userData.username);
 
             const response = await fetch('/getPosts');
             const data = await response.json();
@@ -92,36 +94,52 @@ const FeedList = (props) => {
         return <div className="feedList"><h3>No posts yet!</h3></div>;
     }
 
-    const postNodes = posts.map((post) => (
-        <div key={post._id} className="post">
-            <div className="postHeader">
-                <img
-                    src={post.author.profilePic || '/assets/img/default_pfp.png'}
-                    alt="post profile pic"
-                    className="postProfilePic"
-                />{' '}
-                <strong>
-                    <span
-                        className="usernameColored"
-                        style={post.author.isPremium ? { '--username-color': post.author.usernameColor } : {}}
-                    >
-                        {post.author.displayName}{' '}
-                    </span>
-                    {post.author.isPremium && (
-                        <img
-                            src="/assets/img/premium_icon.png"
-                            alt="Verified"
-                            className="premiumIcon"
-                        />
-                    )} {' '}
-                    @{post.author.username}
-                </strong> ·{' '}
-                <small>{new Date(post.createdDate).toLocaleString()}</small> ·{' '}
-                <em>{post.isPublic ? 'Public' : 'Private'}</em>
+    const postNodes = posts.map((post) => {
+        const profileLink = post.author.username === currentUsername
+            ? '/profile' //your own posts go to your editable profile
+            : `/user/${post.author.username}`;//all other posts go to their user profile
+        return (
+            <div key={post._id} className="post">
+                <div className="postHeader">
+                    <img
+                        src={post.author.profilePic || '/assets/img/default_pfp.png'}
+                        alt="post profile pic"
+                        className="postProfilePic"
+                    />{' '}
+                    <strong>
+                        <span
+                            className="usernameColored"
+                            style={post.author.isPremium ? { '--username-color': post.author.usernameColor } : {}}
+                        >
+                            <a
+                                href={profileLink}
+                                className="usernameLink"
+                            >
+                                {post.author.displayName}{' '}
+                            </a>
+                            {' '}
+                        </span>
+                        {post.author.isPremium && (
+                            <img
+                                src="/assets/img/premium_icon.png"
+                                alt="Verified"
+                                className="premiumIcon"
+                            />
+                        )} {' '}
+                        <a
+                            href={profileLink}
+                            className="usernameLink"
+                        >
+                            @{post.author.username}
+                        </a>
+                    </strong> ·{' '}
+                    <small>{new Date(post.createdDate).toLocaleString()}</small> ·{' '}
+                    <em>{post.isPublic ? 'Public' : 'Private'}</em>
+                </div>
+                <div className="postContent">{post.content}</div>
             </div>
-            <div className="postContent">{post.content}</div>
-        </div>
-    ));
+        );
+    });
 
     return (
         <div className="feedList">

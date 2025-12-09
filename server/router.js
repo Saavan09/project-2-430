@@ -20,6 +20,9 @@ const router = (app) => {
   app.get('/getProfile', mid.requiresLogin, controllers.Account.getProfile);
   app.get('/profile', mid.requiresLogin, controllers.Account.profilePage);
   app.post('/editProfile', mid.requiresLogin, upload.single('profilePic'), controllers.Account.editProfile);
+  // for other person's profile
+  app.get('/user/:username', mid.requiresLogin, controllers.Account.userProfilePage);
+  app.get('/getUserProfile/:username', mid.requiresLogin, controllers.Account.getUserProfile);
 
   // premium routes
   app.post('/upgradePremium', mid.requiresLogin, controllers.Account.upgradePremium);

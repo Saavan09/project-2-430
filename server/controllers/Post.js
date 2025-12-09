@@ -67,7 +67,10 @@ const getPosts = async (req, res) => {
 // get if user is premium or not (for ads)
 const getCurrentUser = (req, res) => {
   if (!req.session.account) return res.status(401).json({ error: 'Not logged in' });
-  return res.json({ isPremium: req.session.account.isPremium });
+  return res.json({
+    username: req.session.account.username,
+    isPremium: req.session.account.isPremium,
+  });
 };
 
 module.exports = {
