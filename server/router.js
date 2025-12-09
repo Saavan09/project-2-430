@@ -15,6 +15,7 @@ const router = (app) => {
   app.post('/post', mid.requiresLogin, controllers.Post.makePost);
   app.get('/getPosts', mid.requiresLogin, controllers.Post.getPosts);
   app.get('/getCurrentUser', mid.requiresLogin, controllers.Post.getCurrentUser);// for ads
+  app.delete('/post/:id', mid.requiresLogin, controllers.Post.deletePost);
 
   // profile routes
   app.get('/getProfile', mid.requiresLogin, controllers.Account.getProfile);

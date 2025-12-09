@@ -139,6 +139,18 @@ const FeedList = (props) => {
                     <em>{post.isPublic ? 'Public' : 'Private'}</em>
                 </div>
                 <div className="postContent">{post.content}</div>
+                {post.author.username === currentUsername && (
+                    <button
+                        className="deletePostBtn"
+                        onClick={() => {
+                            helper.sendDelete(`/post/${post._id}`, () => {
+                                props.triggerReload(); //refresh feed after delete
+                            });
+                        }}
+                    >
+                        Delete
+                    </button>
+                )}
             </div>
         );
     });
@@ -174,7 +186,11 @@ const init = () => {
                 </div>
 
                 <PostForm triggerReload={() => { reloadFeed = !reloadFeed; renderFeed(); }} />
-                <FeedList reloadFeed={reloadFeed} />
+                <FeedList
+                    reloadFeed={reloadFeed}
+                    triggerReload={() => { reloadFeed = !reloadFeed; renderFeed(); }}
+                />
+
             </>
         );
     };

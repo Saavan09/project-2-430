@@ -90,9 +90,36 @@ const getCurrentUser = (req, res) => {
   });
 };
 
+// delete a post
+const deletePost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    const userId = req.session.account._id;
+
+    // find post
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ error: 'Post not found!' });
+    }
+
+    // can only delete your own posts
+    if (post.author.toString() !== userId.toString()) {
+      return res.status(403).json({ error: 'You can only delete your own posts!' });
+    }
+
+    await Post.deleteOne({ _id: postId });
+
+    return res.json({ success: true });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Error deleting post!' });
+  }
+};
+
 module.exports = {
   feedPage,
   makePost,
   getPosts,
   getCurrentUser,
+  deletePost,
 };

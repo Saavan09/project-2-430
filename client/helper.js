@@ -39,8 +39,25 @@ const hideError = () => {
   document.getElementById('message').classList.add('hidden');
 };
 
+// sends DELETE requests
+const sendDelete = async (url, handler) => {
+  const response = await fetch(url, {
+    method: 'DELETE',
+  });
+
+  const result = await response.json();
+  document.getElementById('message').classList.add('hidden');
+
+  if (result.error) {
+    handleError(result.error);
+  }
+
+  if (handler) handler(result);
+};
+
 module.exports = {
   handleError,
   sendPost,
   hideError,
+  sendDelete,
 }
