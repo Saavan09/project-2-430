@@ -32,6 +32,8 @@ const router = (app) => {
   // following routes
   app.post('/follow', mid.requiresLogin, controllers.Account.followUser);
   app.post('/unfollow', mid.requiresLogin, controllers.Account.unfollowUser);
+  app.get('/user/:username/followers', mid.requiresLogin, controllers.Account.getFollowers);
+  app.get('/user/:username/following', mid.requiresLogin, controllers.Account.getFollowing);
 
   // root
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);

@@ -35,8 +35,12 @@ const ProfileDisplay = (props) => (
         )}
 
         <div className="followStats">
-            <p>{props.followersCount} follower{props.followersCount !== 1 ? 's' : ''}</p>
-            <p>{props.followingCount} following</p>
+            <p onClick={props.onFollowersClick} className="clickable">
+                {props.followersCount} follower{props.followersCount !== 1 ? 's' : ''}
+            </p>
+            <p onClick={props.onFollowingClick} className="clickable">
+                {props.followingCount} following
+            </p>
         </div>
 
 
@@ -54,6 +58,11 @@ const UserProfileApp = () => {
     const [profileData, setProfileData] = useState(null);
     const [error, setError] = useState('');
     const [isFollowing, setIsFollowing] = useState(false);
+
+    //for followers/following popup modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalTitle, setModalTitle] = useState('');
+    const [modalUsers, setModalUsers] = useState([]);
 
     //get username from /user/:username
     const username = window.location.pathname.split('/').pop();
@@ -94,6 +103,13 @@ const UserProfileApp = () => {
             const data = await res.json();
             if (data.success) {
                 setIsFollowing(!isFollowing);
+                //update local
+                setProfileData(prev => ({
+                    ...prev,
+                    followersCount: isFollowing
+                        ? prev.followersCount - 1
+                        : prev.followersCount + 1
+                }));
             } else {
                 console.error(data.error);
             }
@@ -102,13 +118,65 @@ const UserProfileApp = () => {
         }
     };
 
+    const openFollowModal = async (type) => {
+        try {
+            const res = await fetch(`/user/${username}/${type}`);
+            const data = await res.json();
+            setModalUsers(data[type]); //'followers' or 'following'
+            setModalTitle(type.charAt(0).toUpperCase() + type.slice(1));
+            setIsModalOpen(true);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     return (
         <div>
-            <ProfileDisplay
-                {...profileData}
-                onFollowToggle={handleFollowToggle}
-                isFollowing={isFollowing}
-            />
+            {profileData ? (
+                <ProfileDisplay
+                    {...profileData}
+                    onFollowToggle={handleFollowToggle}
+                    isFollowing={isFollowing}
+                    onFollowersClick={() => openFollowModal('followers')}
+                    onFollowingClick={() => openFollowModal('following')}
+                />
+            ) : (
+                <p>Loading profile...</p>
+            )}
+
+            {isModalOpen && (
+                <div className="modalOverlay" onClick={() => setIsModalOpen(false)}>
+                    <div className="modalContent" onClick={(e) => e.stopPropagation()}>
+                        <h3>{modalTitle}</h3>
+                        <div className="modalUserList">
+                            {modalUsers.map((user) => (
+                                <div key={user._id} className="modalUser">
+                                    <img
+                                        src={user.profilePic || '/assets/img/default_pfp.png'}
+                                        alt="Profile Pic"
+                                        className="postProfilePic"
+                                    />{' '}
+                                    <span
+                                        className="usernameColored"
+                                        style={user.isPremium ? { '--username-color': user.usernameColor } : {}}
+                                    >
+                                        {user.displayName}{' '}
+                                        {user.isPremium && (
+                                            <img
+                                                src="/assets/img/premium_icon.png"
+                                                alt="Premium"
+                                                className="premiumIcon"
+                                            />
+                                        )}
+                                    </span>
+                                    <span className="username">@{user.username}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <button onClick={() => setIsModalOpen(false)}>Close</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

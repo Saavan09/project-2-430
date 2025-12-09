@@ -308,6 +308,38 @@ const unfollowUser = async (req, res) => {
   }
 };
 
+// get list of followers for a username
+const getFollowers = async (req, res) => {
+  try {
+    const username = `${req.params.username}`;
+    if (!username) return res.status(400).json({ error: 'Username required' });
+
+    const account = await Account.findOne({ username }).populate('followers', 'username displayName profilePic isPremium usernameColor').exec();
+    if (!account) return res.status(404).json({ error: 'User not found' });
+
+    return res.json({ followers: account.followers });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Error fetching followers!' });
+  }
+};
+
+// get list of users that a username is following
+const getFollowing = async (req, res) => {
+  try {
+    const username = `${req.params.username}`;
+    if (!username) return res.status(400).json({ error: 'Username required' });
+
+    const account = await Account.findOne({ username }).populate('following', 'username displayName profilePic isPremium usernameColor').exec();
+    if (!account) return res.status(404).json({ error: 'User not found' });
+
+    return res.json({ following: account.following });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Error fetching following!' });
+  }
+};
+
 module.exports = {
   loginPage,
   profilePage,
@@ -325,4 +357,6 @@ module.exports = {
   getUserProfile,
   followUser,
   unfollowUser,
+  getFollowers,
+  getFollowing,
 };

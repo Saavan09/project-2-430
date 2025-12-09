@@ -64,3 +64,7 @@
   color: inherit; /* inherit the color from the parent span (usernameColored) */
   text-decoration: none; /* remove underline */
 }
+
+.followStats {
+  cursor: pointer;
+}
