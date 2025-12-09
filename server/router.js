@@ -29,6 +29,10 @@ const router = (app) => {
   app.post('/downgradePremium', mid.requiresLogin, controllers.Account.downgradePremium);
   app.get('/premium', mid.requiresLogin, controllers.Account.premiumPage);
 
+  // following routes
+  app.post('/follow', mid.requiresLogin, controllers.Account.followUser);
+  app.post('/unfollow', mid.requiresLogin, controllers.Account.unfollowUser);
+
   // root
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
 

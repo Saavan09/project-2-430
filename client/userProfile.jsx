@@ -35,12 +35,19 @@ const ProfileDisplay = (props) => (
         )}
 
         <p>Joined {new Date(props.createdDate).toLocaleDateString()}</p>
+
+        {props.onFollowToggle && (
+            <button onClick={props.onFollowToggle}>
+                {props.isFollowing ? 'Unfollow' : 'Follow'}
+            </button>
+        )}
     </div>
 );
 
 const UserProfileApp = () => {
     const [profileData, setProfileData] = useState(null);
     const [error, setError] = useState('');
+    const [isFollowing, setIsFollowing] = useState(false);
 
     //get username from /user/:username
     const username = window.location.pathname.split('/').pop();
@@ -55,17 +62,47 @@ const UserProfileApp = () => {
             } else {
                 setProfileData(data);
             }
+
+            const currentUserRes = await fetch('/getCurrentUser');
+            const currentUserData = await currentUserRes.json();
+            if (currentUserData.following) {
+                setIsFollowing(currentUserData.following.includes(data._id));
+            }
         };
 
         fetchUser();
     }, [username]);
 
-    if (error) return <p className="errorText">{error}</p>;
-    if (!profileData) return <p>Loading...</p>;
+    //change button depending on if you are already following the user or not
+    const handleFollowToggle = async () => {
+        if (!profileData) return;
+
+        const endpoint = isFollowing ? '/unfollow' : '/follow';
+
+        try {
+            const res = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: profileData.username }),
+            });
+            const data = await res.json();
+            if (data.success) {
+                setIsFollowing(!isFollowing);
+            } else {
+                console.error(data.error);
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     return (
         <div>
-            <ProfileDisplay {...profileData} />
+            <ProfileDisplay
+                {...profileData}
+                onFollowToggle={handleFollowToggle}
+                isFollowing={isFollowing}
+            />
         </div>
     );
 };

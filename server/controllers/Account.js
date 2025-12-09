@@ -242,6 +242,64 @@ const getUserProfile = async (req, res) => {
   }
 };
 
+// follow another user
+const followUser = async (req, res) => {
+  try {
+    const targetUsername = req.body.username;
+    if (!targetUsername) return res.status(400).json({ error: 'Username required!' });
+
+    if (targetUsername === req.session.account.username) {
+      return res.status(400).json({ error: 'You cannot follow yourself!' });
+    }
+
+    const targetUser = await Account.findOne({ username: targetUsername }).exec();
+    if (!targetUser) return res.status(404).json({ error: 'User not found!' });
+
+    const account = await Account.findById(req.session.account._id).exec();
+    if (!account) return res.status(404).json({ error: 'Account not found!' });
+
+    // only add if not already following
+    if (!account.following.includes(targetUser._id)) {
+      account.following.push(targetUser._id);
+      await account.save();
+    }
+
+    return res.json({ success: true, following: account.following });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Error following user!' });
+  }
+};
+
+// unfollow another user
+const unfollowUser = async (req, res) => {
+  try {
+    const targetUsername = req.body.username;
+    if (!targetUsername) return res.status(400).json({ error: 'Username required!' });
+
+    if (targetUsername === req.session.account.username) {
+      return res.status(400).json({ error: 'You cannot unfollow yourself!' });
+    }
+
+    const targetUser = await Account.findOne({ username: targetUsername }).exec();
+    if (!targetUser) return res.status(404).json({ error: 'User not found!' });
+
+    const account = await Account.findById(req.session.account._id).exec();
+    if (!account) return res.status(404).json({ error: 'Account not found!' });
+
+    // remove user from following array
+    account.following = account.following.filter(
+      (id) => id.toString() !== targetUser._id.toString(),
+    );
+    await account.save();
+
+    return res.json({ success: true, following: account.following });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'Error unfollowing user!' });
+  }
+};
+
 module.exports = {
   loginPage,
   profilePage,
@@ -257,4 +315,6 @@ module.exports = {
   downgradePremium,
   uploadProfilePic,
   getUserProfile,
+  followUser,
+  unfollowUser,
 };

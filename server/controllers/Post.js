@@ -70,6 +70,7 @@ const getCurrentUser = (req, res) => {
   return res.json({
     username: req.session.account.username,
     isPremium: req.session.account.isPremium,
+    following: req.session.account.following.map((id) => id.toString()),
   });
 };
 
