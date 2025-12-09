@@ -34,6 +34,12 @@ const ProfileDisplay = (props) => (
             <p className="bio empty">No bio set.</p>
         )}
 
+        <div className="followStats">
+            <p>{props.followersCount} follower{props.followersCount !== 1 ? 's' : ''}</p>
+            <p>{props.followingCount} following</p>
+        </div>
+
+
         <p>Joined {new Date(props.createdDate).toLocaleDateString()}</p>
 
         {props.onFollowToggle && (

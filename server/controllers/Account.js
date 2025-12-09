@@ -235,6 +235,8 @@ const getUserProfile = async (req, res) => {
       isPremium: account.isPremium,
       profilePic: account.profilePic || '/assets/img/default_pfp.png',
       usernameColor: account.usernameColor,
+      followersCount: account.followers.length,
+      followingCount: account.following.length,
     });
   } catch (err) {
     console.log(err);
@@ -261,7 +263,9 @@ const followUser = async (req, res) => {
     // only add if not already following
     if (!account.following.includes(targetUser._id)) {
       account.following.push(targetUser._id);
+      targetUser.followers.push(account._id);
       await account.save();
+      await targetUser.save();
     }
 
     return res.json({ success: true, following: account.following });
@@ -291,7 +295,11 @@ const unfollowUser = async (req, res) => {
     account.following = account.following.filter(
       (id) => id.toString() !== targetUser._id.toString(),
     );
+    targetUser.followers = targetUser.followers.filter(
+      (id) => id.toString() !== account._id.toString(),
+    );
     await account.save();
+    await targetUser.save();
 
     return res.json({ success: true, following: account.following });
   } catch (err) {

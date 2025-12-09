@@ -62,6 +62,11 @@ const AccountSchema = new mongoose.Schema({
     ref: 'Account',
     default: [],
   }],
+  followers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Account',
+    default: [],
+  }],
 });
 
 // Converts a doc to something we can store in redis later on.
@@ -75,6 +80,7 @@ AccountSchema.statics.toAPI = (doc) => ({
   profilePic: doc.profilePic,
   usernameColor: doc.usernameColor,
   following: doc.following,
+  followrs: doc.followers,
 });
 
 // Helper function to hash a password
