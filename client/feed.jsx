@@ -79,7 +79,9 @@ const FeedList = (props) => {
             setIsPremium(userData.isPremium);
             setCurrentUsername(userData.username);
 
-            const response = await fetch('/getPosts');
+            const filter = window.currentFeedFilter || 'all';
+            const response = await fetch(`/getPosts?filter=${filter}`);
+
             const data = await response.json();
             setPosts(data.posts);
             //if user isn't premium, display ads
@@ -162,6 +164,15 @@ const init = () => {
     const renderFeed = () => {
         root.render(
             <>
+                <div className="feedFilters">
+                    <button onClick={() => { window.currentFeedFilter = 'all'; reloadFeed = !reloadFeed; renderFeed(); }}>
+                        All Posts
+                    </button>
+                    <button onClick={() => { window.currentFeedFilter = 'following'; reloadFeed = !reloadFeed; renderFeed(); }}>
+                        Following
+                    </button>
+                </div>
+
                 <PostForm triggerReload={() => { reloadFeed = !reloadFeed; renderFeed(); }} />
                 <FeedList reloadFeed={reloadFeed} />
             </>

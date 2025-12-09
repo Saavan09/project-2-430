@@ -44,18 +44,28 @@ const makePost = async (req, res) => {
 const getPosts = async (req, res) => {
   try {
     const userId = req.session.account._id;
-    const query = {
-      // mongoose syntax to return posts matching any of these filters
-      // so returns posts that are public AND rturns posts made by the current logged in account
-      $or: [
-        { isPublic: true },
-        { author: userId },
-        {
-          isPublic: false,
-          author: { $in: req.session.account.following }, // private posts by people you follow
-        },
-      ],
-    };
+
+    // build query depending on feed filter mode
+    let query;
+
+    if (req.query.filter === 'following') {
+      // follower feed - ONLY posts (both public and private) from you + people you follow
+      query = {
+        author: { $in: [userId, ...req.session.account.following] },
+      };
+    } else {
+      // default feed - all public posts + private posts from yourself and people you follow
+      query = {
+        $or: [
+          { isPublic: true },
+          { author: userId },
+          {
+            isPublic: false,
+            author: { $in: req.session.account.following },
+          },
+        ],
+      };
+    }
 
     const posts = await Post.find(query) // the search criteria defined earlier
       .sort({ createdDate: -1 }) // to sort the newest first, oldest last
