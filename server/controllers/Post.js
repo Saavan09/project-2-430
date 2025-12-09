@@ -40,14 +40,20 @@ const makePost = async (req, res) => {
 
 // get the posts visible to the currently logged in account
 // all public posts + private posts from this account
+// ALSO all private posts from people you are following
 const getPosts = async (req, res) => {
   try {
+    const userId = req.session.account._id;
     const query = {
       // mongoose syntax to return posts matching any of these filters
       // so returns posts that are public AND rturns posts made by the current logged in account
       $or: [
         { isPublic: true },
-        { author: req.session.account._id },
+        { author: userId },
+        {
+          isPublic: false,
+          author: { $in: req.session.account.following }, // private posts by people you follow
+        },
       ],
     };
 
