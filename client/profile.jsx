@@ -31,6 +31,16 @@ const ProfileDisplay = (props) => (
         ) : (
             <p className="bio empty">No bio set.</p>
         )}
+
+        <div className="followStats">
+            <p onClick={props.onFollowersClick} className="clickable">
+                {props.followersCount} follower{props.followersCount !== 1 ? 's' : ''}
+            </p>
+            <p onClick={props.onFollowingClick} className="clickable">
+                {props.followingCount} following
+            </p>
+        </div>
+
         <p>Joined {new Date(props.createdDate).toLocaleDateString()}</p>
     </div>
 );
@@ -106,6 +116,12 @@ const ProfileApp = () => {
     const [tempProfile, setTempProfile] = useState(profileData);
     const [selectedFile, setSelectedFile] = useState(null);
 
+    //for followers/following popup modal
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalTitle, setModalTitle] = useState('');
+    const [modalUsers, setModalUsers] = useState([]);
+
+
     //selecting a pfp
     const handleFileSelect = (e) => {
         const file = e.target.files[0];
@@ -154,12 +170,36 @@ const ProfileApp = () => {
         }
     };
 
+    const openFollowModal = async (type) => {
+        try {
+            const res = await fetch(`/user/${profileData.username}/${type}`);
+            const data = await res.json();
+            setModalUsers(data[type]); // followers or following
+            setModalTitle(type.charAt(0).toUpperCase() + type.slice(1));
+            setIsModalOpen(true);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+
     useEffect(() => {
         const fetchProfile = async () => {
             const response = await fetch('/getProfile');
             const data = await response.json();
             setProfileData(data);
             setTempProfile(data);
+
+            const followersRes = await fetch(`/user/${data.username}/followers`);
+            const followersData = await followersRes.json();
+            const followingRes = await fetch(`/user/${data.username}/following`);
+            const followingData = await followingRes.json();
+
+            setProfileData(prev => ({
+                ...prev,
+                followersCount: followersData.followers.length,
+                followingCount: followingData.following.length,
+            }));
         };
         fetchProfile();
     }, []);
@@ -248,7 +288,11 @@ const ProfileApp = () => {
     //otherwise show default view profile
     return (
         <div>
-            <ProfileDisplay {...profileData} />
+            <ProfileDisplay
+                {...profileData}
+                onFollowersClick={() => openFollowModal('followers')}
+                onFollowingClick={() => openFollowModal('following')}
+            />
             <button
                 onClick={() => {
                     setTempProfile(profileData); //load current values into temp form
@@ -261,6 +305,40 @@ const ProfileApp = () => {
             >
                 Change Password
             </button>
+
+            {isModalOpen && (
+                <div className="modalOverlay" onClick={() => setIsModalOpen(false)}>
+                    <div className="modalContent" onClick={(e) => e.stopPropagation()}>
+                        <h3>{modalTitle}</h3>
+                        <div className="modalUserList">
+                            {modalUsers.map((user) => (
+                                <div key={user._id} className="modalUser">
+                                    <img
+                                        src={user.profilePic || '/assets/img/default_pfp.png'}
+                                        alt="Profile Pic"
+                                        className="postProfilePic"
+                                    />{' '}
+                                    <span
+                                        className="usernameColored"
+                                        style={user.isPremium ? { '--username-color': user.usernameColor } : {}}
+                                    >
+                                        {user.displayName}{' '}
+                                        {user.isPremium && (
+                                            <img
+                                                src="/assets/img/premium_icon.png"
+                                                alt="Premium"
+                                                className="premiumIcon"
+                                            />
+                                        )}
+                                    </span>
+                                    <span className="username">@{user.username}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <button onClick={() => setIsModalOpen(false)}>Close</button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 
