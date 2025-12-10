@@ -40,6 +40,8 @@ redisClient.connect().then(() => {
   fs.mkdirSync(uploadsDir, { recursive: true });
   app.use('/uploads', express.static(uploadsDir));
 
+  app.use('/bootstrap', express.static(path.join(__dirname, '../node_modules/bootstrap/dist')));
+
   // app.use(favicon(`${__dirname}/../hosted/img/favicon.png`));
   app.use(compression());
 

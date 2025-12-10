@@ -5,52 +5,51 @@ const { createRoot } = require('react-dom/client');
 
 //same as personal account, but for another user
 const ProfileDisplay = (props) => (
-    <div className="profileInfo">
-        <img
-            src={props.profilePic || '/assets/img/default_pfp.png'}
-            alt="Profile Picture"
-            className="profilePic"
-        />
+    <div className="card text-center mb-4">
+        <div className="card-body">
+            <img
+                src={props.profilePic || '/assets/img/default_pfp.png'}
+                alt="Profile Picture"
+                className="rounded-circle img-fluid mb-3"
+                style={{ width: '120px', height: '120px' }}
+            />
 
-        <p
-            className="usernameColored"
-            style={props.isPremium ? { '--username-color': props.usernameColor } : {}}
-        >
-            {props.displayName}{' '}
-            {props.isPremium && (
-                <img
-                    src="/assets/img/premium_icon.png"
-                    alt="Premium User"
-                    className="premiumIcon"
-                />
+            <h4 className="d-flex justify-content-center align-items-center gap-2">
+                <span
+                    className="usernameColored"
+                    style={props.isPremium ? { '--username-color': props.usernameColor } : {}}
+                >
+                    {props.displayName}
+                </span>
+                {props.isPremium && (
+                    <img
+                        src="/assets/img/premium_icon.png"
+                        alt="Premium User"
+                        style={{ width: '1em', height: '1em' }}
+                    />
+                )}
+            </h4>
+
+            <p className="text-muted">@{props.username}</p>
+            <p>{props.bio || <em>No bio set.</em>}</p>
+
+            <div className="d-flex justify-content-center gap-4 mb-3">
+                <span onClick={props.onFollowersClick} className="clickable">
+                    <strong>{props.followersCount}</strong> Follower{props.followersCount !== 1 ? 's' : ''}
+                </span>
+                <span onClick={props.onFollowingClick} className="clickable">
+                    <strong>{props.followingCount}</strong> Following
+                </span>
+            </div>
+
+            <p className="text-muted">Joined {new Date(props.createdDate).toLocaleDateString()}</p>
+
+            {props.onFollowToggle && (
+                <button className="btn btn-primary" onClick={props.onFollowToggle}>
+                    {props.isFollowing ? 'Unfollow' : 'Follow'}
+                </button>
             )}
-        </p>
-
-        <p>@{props.username}</p>
-
-        {props.bio ? (
-            <p className="bio">{props.bio}</p>
-        ) : (
-            <p className="bio empty">No bio set.</p>
-        )}
-
-        <div className="followStats">
-            <p onClick={props.onFollowersClick} className="clickable">
-                {props.followersCount} follower{props.followersCount !== 1 ? 's' : ''}
-            </p>
-            <p onClick={props.onFollowingClick} className="clickable">
-                {props.followingCount} following
-            </p>
         </div>
-
-
-        <p>Joined {new Date(props.createdDate).toLocaleDateString()}</p>
-
-        {props.onFollowToggle && (
-            <button onClick={props.onFollowToggle}>
-                {props.isFollowing ? 'Unfollow' : 'Follow'}
-            </button>
-        )}
     </div>
 );
 
@@ -131,7 +130,7 @@ const UserProfileApp = () => {
     };
 
     return (
-        <div>
+        <div className="container mt-4">
             {profileData ? (
                 <ProfileDisplay
                     {...profileData}
@@ -145,35 +144,46 @@ const UserProfileApp = () => {
             )}
 
             {isModalOpen && (
-                <div className="modalOverlay" onClick={() => setIsModalOpen(false)}>
-                    <div className="modalContent" onClick={(e) => e.stopPropagation()}>
-                        <h3>{modalTitle}</h3>
-                        <div className="modalUserList">
-                            {modalUsers.map((user) => (
-                                <div key={user._id} className="modalUser">
-                                    <img
-                                        src={user.profilePic || '/assets/img/default_pfp.png'}
-                                        alt="Profile Pic"
-                                        className="postProfilePic"
-                                    />{' '}
-                                    <span
-                                        className="usernameColored"
-                                        style={user.isPremium ? { '--username-color': user.usernameColor } : {}}
-                                    >
-                                        {user.displayName}{' '}
-                                        {user.isPremium && (
-                                            <img
-                                                src="/assets/img/premium_icon.png"
-                                                alt="Premium"
-                                                className="premiumIcon"
-                                            />
-                                        )}
-                                    </span>
-                                    <span className="username">@{user.username}</span>
-                                </div>
-                            ))}
+                <div className="modal show d-block" tabIndex="-1" onClick={() => setIsModalOpen(false)}>
+                    <div className="modal-dialog" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">{modalTitle}</h5>
+                                <button type="button" className="btn-close" onClick={() => setIsModalOpen(false)}></button>
+                            </div>
+                            <div className="modal-body">
+                                {modalUsers.map((user) => (
+                                    <div key={user._id} className="d-flex align-items-center mb-2 gap-2">
+                                        <img
+                                            src={user.profilePic || '/assets/img/default_pfp.png'}
+                                            alt="Profile Pic"
+                                            className="rounded-circle"
+                                            style={{ width: '40px', height: '40px' }}
+                                        />
+                                        <div>
+                                            <span
+                                                className="usernameColored"
+                                                style={user.isPremium ? { '--username-color': user.usernameColor } : {}}
+                                            >
+                                                {user.displayName}
+                                                {user.isPremium && (
+                                                    <img
+                                                        src="/assets/img/premium_icon.png"
+                                                        alt="Premium"
+                                                        style={{ width: '1em', height: '1em', marginLeft: '2px' }}
+                                                    />
+                                                )}
+                                            </span>
+                                            <br />
+                                            <span className="text-muted">@{user.username}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={() => setIsModalOpen(false)}>Close</button>
+                            </div>
                         </div>
-                        <button onClick={() => setIsModalOpen(false)}>Close</button>
                     </div>
                 </div>
             )}

@@ -4,21 +4,16 @@
   <title>LinkUp</title>
   <!--<link rel="shortcut icon" href="/assets/img/favicon.png"/>-->
   <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body> 
-  <!--not logged in-->
-  <nav><a href="/login"></a>
-    <div class="navlink"><a id="loginButton" href="/login">Login</a></div>
-    <div class="navlink"><a id="signupButton" href="/signup">Sign up</a></div>
-  </nav>
+  {{> navbar loggedIn=false }}
   
   <section id="content">
 
   </section>
 
-  <div id="message" class='hidden'>
-    <h3><span id="errorMessage"></span></h3>
-  </div>
   <script src="/assets/loginBundle.js"></script>
 </body>
 </html>

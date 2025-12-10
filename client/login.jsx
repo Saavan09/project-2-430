@@ -4,7 +4,6 @@ const { createRoot } = require('react-dom/client');
 
 const handleLogin = (e) => {
     e.preventDefault();
-    helper.hideError();
 
     const username = e.target.querySelector('#user').value;
     const pass = e.target.querySelector('#pass').value;
@@ -20,7 +19,6 @@ const handleLogin = (e) => {
 
 const handleSignup = (e) => {
     e.preventDefault();
-    helper.hideError();
 
     const username = e.target.querySelector('#user').value;
     const pass = e.target.querySelector('#pass').value;
@@ -43,38 +41,61 @@ const handleSignup = (e) => {
 
 const LoginWindow = (props) => {
     return (
-        <form id="loginForm"
+        <form
+            id="loginForm"
             name="loginForm"
             onSubmit={handleLogin}
             action="/login"
             method="POST"
-            className="mainForm"
+            className="card p-4 shadow mx-auto mt-5"
+            style={{ maxWidth: '400px' }}
         >
-            <label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="username" />
-            <label htmlFor="pass">Password: </label>
-            <input id="pass" type="password" name="pass" placeholder="password" />
-            <input className="formSubmit" type="submit" value="Sign in" />
+            <h3 className="mb-3 text-center">Log In</h3>
+
+            <div className="mb-3">
+                <label htmlFor="user" className="form-label">Username</label>
+                <input id="user" type="text" name="username" placeholder="Username" className="form-control" />
+            </div>
+
+            <div className="mb-3">
+                <label htmlFor="pass" className="form-label">Password</label>
+                <input id="pass" type="password" name="pass" placeholder="Password" className="form-control" />
+            </div>
+
+            <button type="submit" className="btn btn-primary w-100">Log In</button>
         </form>
     );
 };
 
 const SignupWindow = (props) => {
     return (
-        <form id="signupForm"
+        <form
+            id="signupForm"
             name="signupForm"
             onSubmit={handleSignup}
             action="/signup"
             method="POST"
-            className="mainForm"
+            className="card p-4 shadow mx-auto mt-5"
+            style={{ maxWidth: '400px' }}
         >
-            <label htmlFor="username">Username: </label>
-            <input id="user" type="text" name="username" placeholder="username" />
-            <label htmlFor="pass">Password: </label>
-            <input id="pass" type="password" name="pass" placeholder="password" />
-            <label htmlFor="pass">Password: </label>
-            <input id="pass2" type="password" name="pass2" placeholder="retype password" />
-            <input className="formSubmit" type="submit" value="Sign up" />
+            <h3 className="mb-3 text-center">Sign Up</h3>
+
+            <div className="mb-3">
+                <label htmlFor="user" className="form-label">Username</label>
+                <input id="user" type="text" name="username" placeholder="Username" className="form-control" />
+            </div>
+
+            <div className="mb-3">
+                <label htmlFor="pass" className="form-label">Password</label>
+                <input id="pass" type="password" name="pass" placeholder="Password" className="form-control" />
+            </div>
+
+            <div className="mb-3">
+                <label htmlFor="pass2" className="form-label">Retype Password</label>
+                <input id="pass2" type="password" name="pass2" placeholder="Retype Password" className="form-control" />
+            </div>
+
+            <button type="submit" className="btn btn-success w-100">Sign Up</button>
         </form>
     );
 };

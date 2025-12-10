@@ -52,51 +52,56 @@ const PremiumPage = () => {
     //non-premium user
     if (!isPremium) {
         return (
-            <div className="getPremium">
-                <h1>Your Account, Made Premium</h1>
-                <p>Welcome to the next level of linking up with friends! Make your account premium to enjoy several exclusive perks:</p>
-                <ul>
-                    <li>No ads clogging up your view</li>
-                    <li>A shiny premium badge on your profile</li>
-                    <li>Extra customization for username colors</li>
-                </ul>
-                <p>Upgrade your account today for only $4.99 monthly!</p>
-
-                <button
-                    className="premiumBtn"
-                    onClick={async () => {
-                        const success = await togglePremium(true);
-                        if (success) setIsPremium(true);
-                    }}
-                >
-                    Click to Pay
-                </button>
+            <div className="container mt-5">
+                <div className="card mx-auto" style={{ maxWidth: '600px' }}>
+                    <div className="card-body text-center">
+                        <h2 className="card-title mb-3">Your Account, Made Premium</h2>
+                        <p>Welcome to the next level of linking up with friends! Make your account premium to enjoy several exclusive perks:</p>
+                        <ul className="text-start mb-3">
+                            <li>No ads clogging up your view</li>
+                            <li>A shiny premium badge on your profile</li>
+                            <li>Extra customization for username colors</li>
+                        </ul>
+                        <p>Upgrade your account today for only $4.99 monthly!</p>
+                        <button
+                            className="btn btn-primary mt-3"
+                            onClick={async () => {
+                                const success = await togglePremium(true);
+                                if (success) setIsPremium(true);
+                            }}
+                        >
+                            Click to Pay
+                        </button>
+                    </div>
+                </div>
             </div>
         );
     }
 
     //premium user
     return (
-        <div className="getPremium">
-            <h1>Your Account, Forever Premium</h1>
-            <p>Thanks for supporting us! You currently have access to all the following exclusive premium perks:</p>
-            <ul>
-                <li>No ads clogging up your view</li>
-                <li>A shiny premium badge on your profile</li>
-                <li>Extra customization for username colors</li>
-            </ul>
-
-            <p>Stay updated on more upcoming perks for premium users! Your subscription will automatically renew every month for $4.99.</p>
-
-            <button
-                className="premiumBtn"
-                onClick={async () => {
-                    const success = await togglePremium(false);
-                    if (success) setIsPremium(false);
-                }}
-            >
-                Cancel My Subscription
-            </button>
+        <div className="container mt-5">
+            <div className="card mx-auto" style={{ maxWidth: '600px' }}>
+                <div className="card-body text-center">
+                    <h2 className="card-title mb-3">Your Account, Forever Premium</h2>
+                    <p>Thanks for supporting us! You currently have access to all the following exclusive premium perks:</p>
+                    <ul className="text-start mb-3">
+                        <li>No ads clogging up your view</li>
+                        <li>A shiny premium badge on your profile</li>
+                        <li>Extra customization for username colors</li>
+                    </ul>
+                    <p>Stay updated on more upcoming perks for premium users! Your subscription will automatically renew every month for $4.99.</p>
+                    <button
+                        className="btn btn-secondary mt-3"
+                        onClick={async () => {
+                            const success = await togglePremium(false);
+                            if (success) setIsPremium(false);
+                        }}
+                    >
+                        Cancel My Subscription
+                    </button>
+                </div>
+            </div>
         </div>
     );
 };

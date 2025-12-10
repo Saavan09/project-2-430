@@ -27,21 +27,6 @@
   /* circle */
 }
 
-/* responsive scaling of pfp, different default sizes */
-@media (max-width: 768px) {
-  .profilePic {
-    width: 120px;
-    height: 120px;
-  }
-}
-
-@media (max-width: 480px) {
-  .profilePic {
-    width: 80px;
-    height: 80px;
-  }
-}
-
 /* post pfp styling (in feed) */
 .postProfilePic {
   width: 1.5em;
@@ -61,10 +46,96 @@
 
 /* username/display name clickability in feed */
 .usernameLink {
-  color: inherit; /* inherit the color from the parent span (usernameColored) */
-  text-decoration: none; /* remove underline */
+  color: inherit;
+  /* inherit the color from the parent span (usernameColored) */
+  text-decoration: none;
+  /* remove underline */
 }
 
 .followStats {
   cursor: pointer;
+}
+
+
+
+
+/* BOOTSTRAP RECOLOR */
+
+body {
+  background-color: #f5f0e6;
+  color: #333;
+}
+
+.card,
+.post,
+.profileCard {
+  background-color: #ffffff;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+  background-color: #a0b4f5;
+  border-color: #a0b4f5;
+}
+
+.btn-primary:hover {
+  background-color: #8aa8e6;
+  border-color: #8aa8e6;
+}
+
+.btn-outline-primary {
+  color: #a0b4f5;
+  border-color: #a0b4f5;
+}
+
+.btn-outline-primary:hover {
+  background-color: #a0b4f5;
+  color: #ffffff;
+}
+
+.btn-danger {
+  background-color: #e59696;
+  border-color: #e59696;
+}
+
+.btn-danger:hover {
+  background-color: #d87a7a;
+  border-color: #d87a7a;
+}
+
+.btn-secondary {
+  background-color: #e59696;
+  border-color: #e59696;
+}
+
+.btn-secondary:hover {
+  background-color: #d87a7a;
+  border-color: #d87a7a;
+}
+
+.navbar-custom {
+  background-color: #a9c9ff;
+}
+
+.navbar-custom .navbar-brand {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 1.9rem;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.navbar-custom .nav-link {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
+.navbar-custom .nav-link:hover {
+  color: #eef4ff;
+}
+
+.navbar-custom .nav-link.active {
+  background-color: #7c9fff;
+  color: #ffffff;
 }

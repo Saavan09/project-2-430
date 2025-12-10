@@ -6,7 +6,6 @@ const { createRoot } = require('react-dom/client');
 //handles form submission when creating a new post
 const handlePost = (e, onPostAdded) => {
     e.preventDefault();
-    helper.hideError();
 
     const content = e.target.querySelector('#postContent').value;
     const isPublic = e.target.querySelector('#postPublic').checked;
@@ -32,20 +31,25 @@ const PostForm = (props) => {
             onSubmit={onSubmitHandler}
             action="/post"
             method="POST"
-            className="postForm"
+            className="mb-4"
         >
-            <textarea
-                id="postContent"
-                name="content"
-                placeholder="What's happening?"
-                rows="3"
-                required
-            />
-            <label>
-                <input id="postPublic" type="checkbox" name="isPublic" defaultChecked />
-                Public
-            </label>
-            <input className="postSubmit" type="submit" value="Post" />
+            <div className="card">
+                <div className="card-body">
+                    <textarea
+                        id="postContent"
+                        name="content"
+                        placeholder="What's happening?"
+                        rows="3"
+                        required
+                        className="form-control mb-2"
+                    />
+                    <div className="form-check mb-2">
+                        <input id="postPublic" type="checkbox" name="isPublic" defaultChecked className="form-check-input" />
+                        <label htmlFor="postPublic" className="form-check-label">Public</label>
+                    </div>
+                    <button type="submit" className="btn btn-primary">Post</button>
+                </div>
+            </div>
         </form>
     );
 };
@@ -59,7 +63,7 @@ const allAds = [
 ];
 
 //get random ads to show on the page
-const getRandomAds = (count = 2) => {
+const getRandomAds = (count = 3) => {
     const shuffled = allAds.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
 };
@@ -101,69 +105,70 @@ const FeedList = (props) => {
             ? '/profile' //your own posts go to your editable profile
             : `/user/${post.author.username}`;//all other posts go to their user profile
         return (
-            <div key={post._id} className="post">
-                <div className="postHeader">
-                    <img
-                        src={post.author.profilePic || '/assets/img/default_pfp.png'}
-                        alt="post profile pic"
-                        className="postProfilePic"
-                    />{' '}
-                    <strong>
-                        <span
-                            className="usernameColored"
-                            style={post.author.isPremium ? { '--username-color': post.author.usernameColor } : {}}
+            <div key={post._id} className="card mb-3">
+                <div className="card-body">
+                    <div className="d-flex align-items-center mb-2">
+                        <img
+                            src={post.author.profilePic || '/assets/img/default_pfp.png'}
+                            alt="post profile pic"
+                            className="rounded-circle me-2"
+                            style={{ width: '50px', height: '50px' }}
+                        />
+                        <div>
+                            <strong>
+                                <a
+                                    href={profileLink}
+                                    className="text-decoration-none"
+                                    style={{ color: post.author.isPremium ? post.author.usernameColor : '#000000' }}
+                                >
+                                    {post.author.displayName}
+                                </a>
+
+                                {post.author.isPremium && (
+                                    <img src="/assets/img/premium_icon.png" alt="Verified" style={{ width: '1em', height: '1em', marginLeft: '2px' }} />
+                                )}{' '}
+                                <a href={profileLink} className="text-decoration-none text-muted">
+                                    @{post.author.username}
+                                </a>
+                            </strong>
+                            <div>
+                                <small className="text-muted">{new Date(post.createdDate).toLocaleString()} · <em>{post.isPublic ? 'Public' : 'Private'}</em></small>
+                            </div>
+                        </div>
+                    </div>
+                    <p className="card-text">{post.content}</p>
+                    {post.author.username === currentUsername && (
+                        <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => {
+                                helper.sendDelete(`/post/${post._id}`, () => {
+                                    props.triggerReload();
+                                });
+                            }}
                         >
-                            <a
-                                href={profileLink}
-                                className="usernameLink"
-                            >
-                                {post.author.displayName}{' '}
-                            </a>
-                            {' '}
-                        </span>
-                        {post.author.isPremium && (
-                            <img
-                                src="/assets/img/premium_icon.png"
-                                alt="Verified"
-                                className="premiumIcon"
-                            />
-                        )} {' '}
-                        <a
-                            href={profileLink}
-                            className="usernameLink"
-                        >
-                            @{post.author.username}
-                        </a>
-                    </strong> ·{' '}
-                    <small>{new Date(post.createdDate).toLocaleString()}</small> ·{' '}
-                    <em>{post.isPublic ? 'Public' : 'Private'}</em>
+                            Delete
+                        </button>
+                    )}
                 </div>
-                <div className="postContent">{post.content}</div>
-                {post.author.username === currentUsername && (
-                    <button
-                        className="deletePostBtn"
-                        onClick={() => {
-                            helper.sendDelete(`/post/${post._id}`, () => {
-                                props.triggerReload(); //refresh feed after delete
-                            });
-                        }}
-                    >
-                        Delete
-                    </button>
-                )}
             </div>
         );
     });
 
     return (
-        <div className="feedList">
-            {postNodes}
+        <div className="row">
+            <div className={isPremium ? "col-12" : "col-lg-8"}>
+                {postNodes}
+            </div>
 
-            {!isPremium && ads.map((ad) => (
-                <div className="ad">
-                    <img src={ad} alt="ad" />
+            {!isPremium && ads.length > 0 && (
+                <div className="col-lg-4">
+                    {ads.map((ad, idx) => (
+                        <div key={idx} className="card mb-3">
+                            <img src={ad} className="card-img-top" alt="ad" />
+                        </div>
+                    ))}
                 </div>
-            ))}
+            )}
         </div>
     );
 };
@@ -176,20 +181,24 @@ const init = () => {
     const renderFeed = () => {
         root.render(
             <>
-                <div className="feedFilters">
-                    <button onClick={() => { window.currentFeedFilter = 'all'; reloadFeed = !reloadFeed; renderFeed(); }}>
-                        All Posts
-                    </button>
-                    <button onClick={() => { window.currentFeedFilter = 'following'; reloadFeed = !reloadFeed; renderFeed(); }}>
-                        Following
-                    </button>
-                </div>
+                <div className="container mt-4">
+                    <div className="d-flex justify-content-center mb-3 gap-2">
+                        <button
+                            className={window.currentFeedFilter === 'following'
+                                ? 'btn btn-outline-primary'
+                                : 'btn btn-primary'}
+                            onClick={() => { window.currentFeedFilter = 'all'; reloadFeed = !reloadFeed; renderFeed(); }}>All Posts</button>
+                        <button
+                            className={window.currentFeedFilter === 'following' ? "btn btn-primary" : "btn btn-outline-primary"}
+                            onClick={() => { window.currentFeedFilter = 'following'; reloadFeed = !reloadFeed; renderFeed(); }}>Following</button>
+                    </div>
 
-                <PostForm triggerReload={() => { reloadFeed = !reloadFeed; renderFeed(); }} />
-                <FeedList
-                    reloadFeed={reloadFeed}
-                    triggerReload={() => { reloadFeed = !reloadFeed; renderFeed(); }}
-                />
+                    <PostForm triggerReload={() => { reloadFeed = !reloadFeed; renderFeed(); }} />
+                    <FeedList
+                        reloadFeed={reloadFeed}
+                        triggerReload={() => { reloadFeed = !reloadFeed; renderFeed(); }}
+                    />
+                </div>
 
             </>
         );

@@ -4,22 +4,15 @@
   <title>Get Premium</title>
   <!--<link rel="shortcut icon" href="/assets/img/favicon.png"/>-->
   <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
-  <!--already logged in-->
-  <nav><a href="/login"></a>
-    <div class="navlink"><a href="/feed">Home</a></div>
-    <div class="navlink"><a href="/profile">My Profile</a></div>
-    <div class="navlink"><a href="/premium">Premium</a></div>
-    <div class="navlink"><a href="/logout">Log out</a></div>
-  </nav>
+  {{> navbar loggedIn=true }}
 
   <section id="premium">
   </section>
 
-  <div id="message" class='hidden'>
-    <h3><span id="errorMessage"></span></h3>
-  </div>
   <script src="/assets/premiumBundle.js"></script>
 </body>
 </html>
