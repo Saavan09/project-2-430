@@ -139,3 +139,7 @@ body {
   background-color: #7c9fff;
   color: #ffffff;
 }
+
+.clickable {
+  cursor: pointer;
+}
