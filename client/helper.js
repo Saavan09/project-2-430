@@ -19,7 +19,6 @@ const sendPost = async (url, data, handler) => {
   });
 
   const result = await response.json();
-  document.getElementById('message').classList.add('hidden');
 
   if (result.redirect) {
     window.location = result.redirect;
@@ -41,7 +40,6 @@ const sendDelete = async (url, handler) => {
   });
 
   const result = await response.json();
-  document.getElementById('message').classList.add('hidden');
 
   if (result.error) {
     handleError(result.error);
